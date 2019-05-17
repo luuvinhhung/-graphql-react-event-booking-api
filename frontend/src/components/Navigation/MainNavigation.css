@@ -1,5 +1,5 @@
 .main-navigation {
-  position: fixed;
+  /* position: fixed; */
   left: 0;
   top: 0;
   width: 100%;
@@ -38,5 +38,5 @@
 .main-navigation__items a:hover,
 .main-navigation__items a:active,
 .main-navigation__items a.active {
-    color: #f8e264;
+    color: white;
 }

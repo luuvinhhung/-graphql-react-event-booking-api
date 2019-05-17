@@ -1,0 +1,21 @@
+.auth-form {
+  width: 25rem;
+  max-width: 80%;
+  margin: 5rem auto;
+}
+
+.form-control label {
+  min-height: 20px;
+  width: 100%;
+  display: block;
+  border-radius: 3px;
+
+}
+
+.form-control label {
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  margin-bottom: 1rem;
+}
