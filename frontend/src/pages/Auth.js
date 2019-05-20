@@ -16,16 +16,17 @@ class AuthPage extends Component {
   }
   static contextType = AuthContext
   switchModeHandle = () => {
-    console.log('ok')
     this.setState(prevState => {
       return { isLogin: !prevState.isLogin }
     })
   }
   submitHandle = (e) => {
     e.preventDefault()
-    const email = this.emailEl.current.state.value
-    const password = this.passwordEl.current.state.value
-    console.log(email, password)
+    // const email = this.emailEl.current.state.value
+    // const password = this.passwordEl.current.state.value
+    const email = 'hung@gmail.com'
+    const password = '123'
+    // console.log(email, password)
     if (email.trim().lenght === 0 || password.trim().length === 0) {
       console.log('email or password is empty')
       return
@@ -52,7 +53,7 @@ class AuthPage extends Component {
         `
       }
     }
-    console.log(requestBody.query)
+    // console.log(requestBody.query)
     fetch('http://localhost:3001/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
