@@ -1,16 +1,20 @@
 import React, { Component } from 'react'
 import './Events.css'
-import moment from 'moment';
-import { Button, Input, DatePicker } from 'antd'
+import moment from 'moment'
+import { Button, Input, DatePicker, Spin, Alert } from 'antd'
 import Modal from '../components/Modal/modal'
 import AuthContext from '../context/auth.context'
+import EventList from '../components/Events/EventList/EventList'
 
 const { TextArea } = Input
 
 class EventsPage extends Component {
   state = {
     modalVisible: false,
-    events: []
+    events: [],
+    isLoading: false,
+    selectedEvent: null,
+    modelBookingVisible: false
   }
   static contextType = AuthContext
   constructor(props) {
@@ -28,6 +32,12 @@ class EventsPage extends Component {
     // console.log(this.state.modalVisible)
     this.setState(prevState => {
       return { modalVisible: !prevState.modalVisible }
+    })
+  }
+  togglemodalBookingVisible = () => {
+    this.setState(prevState => {
+      return { modelBookingVisible: !prevState.modelBookingVisible,
+      selectedEvent: null }
     })
   }
   submitHandle = () => {
@@ -64,20 +74,33 @@ class EventsPage extends Component {
     })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!');
+          throw new Error('Failed!')
         }
-        return res.json();
+        return res.json()
       })
       .then(resData => {
-        console.log(resData)
-        this.fetchEvents()
+        this.setState(prevState => {
+          const updatedEvents = [...prevState.events]
+          updatedEvents.push({
+            _id: resData.data.createEvent._id,
+            title: resData.data.createEvent.title,
+            description: resData.data.createEvent.description,
+            date: resData.data.createEvent.date,
+            price: resData.data.createEvent.price,
+            creator: {
+              _id: this.context.userId
+            }
+          })
+          return { events: updatedEvents }
+        })
       })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   }
 
   fetchEvents() {
+    this.setState({ isLoading: true })
     const requestBody = {
       query: `
           query {
@@ -104,28 +127,43 @@ class EventsPage extends Component {
     })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!');
+          throw new Error('Failed!')
         }
-        return res.json();
+        return res.json()
       })
       .then(resData => {
         // console.log(resData)
         const events = resData.data.events
         console.log(events)
         this.setState({
-          events
+          events,
+          isLoading: false
         })
       })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+        this.setState({ isLoading: false })
+      })
+  }
+  showDetailHandler = eventId => {
+    this.togglemodalBookingVisible()
+    this.setState(prevState => {
+      const selectedEvent = prevState.events.find(e => e._id === eventId)
+      console.log(selectedEvent)
+      return { selectedEvent: selectedEvent }
+    })
+  }
+  bookEventHandler = () => {
+    this.togglemodalBookingVisible()
+    console.log('ok')
   }
   render() {
     const { modalVisible } = this.state
     const dateFormat = 'DD/MMM/YYYY'
-    const eventList = this.state.events.map(event => {
-      return <li className='events__list-item' key={event._id}>{event.title}</li>
-    })
+    const { events } = this.state
+    // const eventList = this.state.events.map(event => {
+    //   return <li className='events__list-item' key={event._id}>{event.title}</li>
+    // })
     return (
       <>
         <Modal
@@ -162,14 +200,25 @@ class EventsPage extends Component {
             </div>
           </form>
         </Modal>
+        {this.state.selectedEvent && <Modal
+          title={this.state.selectedEvent.title}
+          modalVisible={this.state.modelBookingVisible}
+          onCancel={this.togglemodalBookingVisible}
+          onOk={this.bookEventHandler}
+        >
+          <h1>{this.state.selectedEvent.title}</h1>
+        </Modal>}
         {this.context.token &&
           (<div className='events-control'>
             <h2>Share your own Events</h2>
             <Button onClick={this.togglemodalVisible}>Create Event</Button>
           </div>)}
-        <ul className='events__list'>
-          {eventList}
-        </ul>
+        {this.state.isLoading ?
+          <div style={{ textAlign: 'center' }}>
+            <Spin tip="Loading...">
+            </Spin>
+          </div>
+          : <EventList events={events} authUserId={this.context.userId} onViewDetail={this.showDetailHandler} />}
       </>
     )
   }

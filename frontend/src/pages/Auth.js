@@ -24,7 +24,7 @@ class AuthPage extends Component {
     e.preventDefault()
     // const email = this.emailEl.current.state.value
     // const password = this.passwordEl.current.state.value
-    const email = 'hung@gmail.com'
+    const email = 'hung1@gmail.com'
     const password = '123'
     // console.log(email, password)
     if (email.trim().lenght === 0 || password.trim().length === 0) {
