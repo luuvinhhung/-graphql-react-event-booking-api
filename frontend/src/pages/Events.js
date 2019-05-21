@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './Events.css'
 import moment from 'moment'
-import { Button, Input, DatePicker, Spin, Alert } from 'antd'
+import { Button, Input, DatePicker, Spin } from 'antd'
 import Modal from '../components/Modal/modal'
 import AuthContext from '../context/auth.context'
 import EventList from '../components/Events/EventList/EventList'
@@ -161,7 +161,7 @@ class EventsPage extends Component {
       this.setState({ selectedEvent: null });
       return;
     }
-    console.log(this.state.selectedEvent._id)
+    // console.log(this.state.selectedEvent._id)
     const requestBody = {
       query: `
           mutation {
@@ -174,7 +174,7 @@ class EventsPage extends Component {
         `
     };
     const token = this.context.token
-    console.log(token)
+    // console.log(token)
     fetch('http://localhost:3001/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),

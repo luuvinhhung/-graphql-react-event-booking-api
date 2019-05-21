@@ -22,6 +22,7 @@ app.use((req, res, next) => {
 })
 
 app.use(isAuth)
+app.disable('x-powered-by')
 app.use(
   '/graphql',
   graphqlHttp({

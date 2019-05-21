@@ -1,11 +1,13 @@
 import React from 'react'
 import './App.css'
-import { BrowserRouter, Route, Redirect, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import AuthPage from './pages/Auth'
 import EventsPage from './pages/Events'
 import BookingsPage from './pages/Bookings'
 import MainNavigation from './components/Navigation/MainNavigation'
 import AuthContext from './context/auth.context'
+// import { routes } from './routes'
+// import PrivateRoute from './PrivateRoute'
 
 class App extends React.Component {
   state = {
@@ -16,11 +18,11 @@ class App extends React.Component {
     this.setState({ token: token, userId: userId })
   }
   logout = () => { this.setState({ token: null, userId: null }) }
-  render () {
+  render() {
     const { token } = this.state
     const { userId } = this.state
     return (
-      <BrowserRouter> 
+      <Router>
         <>
           <AuthContext.Provider
             value={{
@@ -39,10 +41,20 @@ class App extends React.Component {
                 {token && <Route path='/bookings' component={BookingsPage} />}
                 <Redirect to='/auth' exact />
               </Switch>
+              {/* <Switch>
+                  {routes.map((route, i) =>
+                    route.private === true ? (
+                      <PrivateRoute key={i} {...route} />
+                    ) : (
+                        <Route key={i} {...route} />
+                      )
+                  )}
+                  <Redirect to='/auth' />
+              </Switch> */}
             </main>
           </AuthContext.Provider>
         </>
-      </BrowserRouter>
+      </Router>
     )
   }
 }

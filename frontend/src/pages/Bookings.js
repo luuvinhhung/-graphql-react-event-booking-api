@@ -7,7 +7,7 @@ class BookingsPage extends Component {
     bookings: []
   }
   isActive = true
-  static contextType = AuthContext;
+  static contextType = AuthContext
   componentDidMount() {
     this.fetchBookings()
   }
