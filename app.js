@@ -31,7 +31,7 @@ app.use(
     graphiql: true
   })
 )
-
+// process.env.MONGO_USER trong nodemon.json
 mongoose
   .connect(
     `mongodb+srv://${process.env.MONGO_USER}:${
