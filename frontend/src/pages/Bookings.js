@@ -112,7 +112,7 @@ class BookingsPage extends Component {
     return (
       <>
         {this.state.isLoading ?
-          <div style={{ textAlign: 'center', paddingTop: '20%' }}>
+          <div style={{ textAlign: 'center', paddingTop: '30%' }}>
             <Spin tip="Loading...">
             </Spin>
           </div>
