@@ -38,6 +38,9 @@ const user = async userId => {
     return {
       ...user._doc,
       _id: user.id,
+      // TODO: fix bug
+      // load event created by user => ERROR
+      // createdEvents: () => eventLoader.loadMany(user._doc.createdEvents)
       createdEvents: eventLoader.load.bind(this, user._doc.createdEvents)
     }
   } catch (err) {

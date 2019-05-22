@@ -45,25 +45,28 @@ class EventsPage extends Component {
   submitHandle = () => {
     this.togglemodalVisible()
     const title = this.titleEl.current.state.value
-    const price = this.priceEl.current.state.value
+    const price = +this.priceEl.current.state.value
     const date = this.dateEl.current.picker.state.value.toISOString()
     const description = this.descriptionEl.current.textAreaRef.value
     const requestBody = {
+      // check type of variables in graphql/schema
       query: `
-          mutation {
-            createEvent(eventInput: {title: "${title}", description: "${description}", price: ${price}, date: "${date}"}) {
+          mutation CreateEvent($title: String!, $desc: String!, $price: Float!, $date: String!) {
+            createEvent(eventInput: {title: $title, description: $desc, price: $price, date: $date}) {
               _id
               title
               description
               date
               price
-              creator {
-                _id
-                email
-              }
             }
           }
-        `
+        `,
+      variables: {
+        title: title,
+        desc: description,
+        price: price,
+        date: date
+      }
     }
     const token = this.context.token
     fetch('http://localhost:3001/graphql', {
@@ -164,103 +167,106 @@ class EventsPage extends Component {
     // console.log(this.state.selectedEvent._id)
     const requestBody = {
       query: `
-          mutation {
-            bookEvent(eventId: "${this.state.selectedEvent._id}") {
+          mutation BookEvent($eventId: ID!) {
+            bookEvent(eventId: $eventId) {
             _id
             createdAt
             updatedAt
             }
           }
-        `
-    };
-    const token = this.context.token
-    // console.log(token)
-    fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
-      }
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!');
-        }
-        return res.json();
-      })
-      .then(resData => {
-        console.log(resData);
-        this.setState({ selectedEvent: null });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+        `,
+      variables: {
+        eventId: this.state.selectedEvent._id
   }
-  render() {
-    const { modalVisible } = this.state
-    const dateFormat = 'DD/MMM/YYYY'
-    const { events } = this.state
-    // const eventList = this.state.events.map(event => {
-    //   return <li className='events__list-item' key={event._id}>{event.title}</li>
-    // })
-    return (
-      <>
-        <Modal
-          title={'Create Event'}
-          modalVisible={modalVisible}
-          onCancel={this.togglemodalVisible}
-          onOk={this.submitHandle}
-        >
-          <form>
-            <div className='form-control'>
-              <label htmlFor='title'>Title</label>
-              <Input type='text' id='title' ref={this.titleEl}></Input>
-            </div>
-            <div className='form-control'>
-              <label htmlFor='price'>Price</label>
-              <Input min={'0'} type='number' id='price' ref={this.priceEl}></Input>
-            </div>
-            <div className='form-control'>
-              <label htmlFor='date'>Date</label>
-              <DatePicker
-                defaultValue={moment(new Date(), dateFormat)}
-                format={dateFormat}
-                // onChange={(date, dateString) => this.date = dateString }
-                ref={this.dateEl} />
-            </div>
-            <div className='form-control'>
-              <label htmlFor='description'>Description</label>
-              <TextArea
-                placeholder="Introduce your event"
-                autosize={{ minRows: 3, maxRows: 6 }}
-                ref={this.descriptionEl}
-                onChange={this.testArea}
-              />
-            </div>
-          </form>
-        </Modal>
-        {this.state.selectedEvent && <Modal
-          title={this.state.selectedEvent.title}
-          modalVisible={this.state.modelBookingVisible}
-          onCancel={this.togglemodalBookingVisible}
-          onOk={this.bookEventHandler}
-        >
-          <h1>{this.state.selectedEvent.title}</h1>
-        </Modal>}
-        {this.context.token &&
-          (<div className='events-control'>
-            <h2>Share your own Events</h2>
-            <Button onClick={this.togglemodalVisible}>Create Event</Button>
-          </div>)}
-        {this.state.isLoading ?
-          <div style={{ textAlign: 'center' }}>
-            <Spin tip="Loading...">
-            </Spin>
+};
+const token = this.context.token
+// console.log(token)
+fetch('http://localhost:3001/graphql', {
+  method: 'POST',
+  body: JSON.stringify(requestBody),
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + token
+  }
+})
+  .then(res => {
+    if (res.status !== 200 && res.status !== 201) {
+      throw new Error('Failed!');
+    }
+    return res.json();
+  })
+  .then(resData => {
+    console.log(resData);
+    this.setState({ selectedEvent: null });
+  })
+  .catch(err => {
+    console.log(err);
+  });
+  }
+render() {
+  const { modalVisible } = this.state
+  const dateFormat = 'DD/MMM/YYYY'
+  const { events } = this.state
+  // const eventList = this.state.events.map(event => {
+  //   return <li className='events__list-item' key={event._id}>{event.title}</li>
+  // })
+  return (
+    <>
+      <Modal
+        title={'Create Event'}
+        modalVisible={modalVisible}
+        onCancel={this.togglemodalVisible}
+        onOk={this.submitHandle}
+      >
+        <form>
+          <div className='form-control'>
+            <label htmlFor='title'>Title</label>
+            <Input type='text' id='title' ref={this.titleEl}></Input>
           </div>
-          : <EventList events={events} authUserId={this.context.userId} onViewDetail={this.showDetailHandler} />}
-      </>
-    )
-  }
+          <div className='form-control'>
+            <label htmlFor='price'>Price</label>
+            <Input min={'0'} type='number' id='price' ref={this.priceEl}></Input>
+          </div>
+          <div className='form-control'>
+            <label htmlFor='date'>Date</label>
+            <DatePicker
+              defaultValue={moment(new Date(), dateFormat)}
+              format={dateFormat}
+              // onChange={(date, dateString) => this.date = dateString }
+              ref={this.dateEl} />
+          </div>
+          <div className='form-control'>
+            <label htmlFor='description'>Description</label>
+            <TextArea
+              placeholder="Introduce your event"
+              autosize={{ minRows: 3, maxRows: 6 }}
+              ref={this.descriptionEl}
+              onChange={this.testArea}
+            />
+          </div>
+        </form>
+      </Modal>
+      {this.state.selectedEvent && <Modal
+        title={this.state.selectedEvent.title}
+        modalVisible={this.state.modelBookingVisible}
+        onCancel={this.togglemodalBookingVisible}
+        onOk={this.bookEventHandler}
+      >
+        <h1>{this.state.selectedEvent.title}</h1>
+      </Modal>}
+      {this.context.token &&
+        (<div className='events-control'>
+          <h2>Share your own Events</h2>
+          <Button onClick={this.togglemodalVisible}>Create Event</Button>
+        </div>)}
+      {this.state.isLoading ?
+        <div style={{ textAlign: 'center' }}>
+          <Spin tip="Loading...">
+          </Spin>
+        </div>
+        : <EventList events={events} authUserId={this.context.userId} onViewDetail={this.showDetailHandler} />}
+    </>
+  )
+}
 }
 export default EventsPage
