@@ -2,11 +2,14 @@ import React, { Component } from 'react'
 import { Spin } from 'antd'
 import AuthContext from '../context/auth.context'
 import BookingList from '../components/Bookings/BookingList/BookingList'
+import BookingsChart from '../components/Bookings/BookingsChart/BookingsChart'
+import BookingsControls from '../components/Bookings/BookingsControls/BookingsControls'
 
 class BookingsPage extends Component {
   state = {
     isLoading: false,
-    bookings: []
+    bookings: [],
+    outputType: 'list'
   }
   isActive = true
   static contextType = AuthContext
@@ -110,16 +113,48 @@ class BookingsPage extends Component {
         this.setState({ isLoading: false });
       });
   }
+  changeOutputTypeHandler = (outputType) => {
+    if (outputType === 'list') {
+      this.setState({
+        outputType: 'list'
+      })
+    } else {
+      this.setState({
+        outputType: 'chart'
+      })
+    }
+  }
+
   render() {
+    let content = <Spin style={{ padding: '30px 50%' }} tip="Loading..." />
     const { bookings } = this.state
+    if (!this.state.isLoading) {
+      content = (
+        <>
+          <div style={{ textAlign: 'center', paddingTop: 30 }}>
+            <BookingsControls 
+              activeOutputType={this.state.outputType}
+              onChange={this.changeOutputTypeHandler} />
+            {/* <Button onClick={this.changeOutputTypeHandler.bind(this, 'list')}>List</Button>
+            <Button onClick={this.changeOutputTypeHandler.bind(this, 'chart')}>Chart</Button> */}
+          </div>
+          <div>
+            {
+              this.state.outputType === 'list' ? (
+                <BookingList
+                  bookings={bookings}
+                  onDelete={this.deleteBookingHangler} />
+              ) : (
+                  <BookingsChart bookings={bookings} />
+                )
+            }
+          </div>
+        </>
+      )
+    }
     return (
       <>
-        {this.state.isLoading ?
-          <div style={{ textAlign: 'center', paddingTop: '30%' }}>
-            <Spin tip="Loading...">
-            </Spin>
-          </div>
-          : <BookingList bookings={bookings} onDelete={this.deleteBookingHangler} />}
+        {content}
       </>
 
     )

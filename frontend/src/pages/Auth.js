@@ -22,10 +22,10 @@ class AuthPage extends Component {
   }
   submitHandle = (e) => {
     e.preventDefault()
-    const email = this.emailEl.current.state.value
-    const password = this.passwordEl.current.state.value
-    // const email = 'hung1@gmail.com'
-    // const password = '123'
+    // const email = this.emailEl.current.state.value
+    // const password = this.passwordEl.current.state.value
+    const email = 'hung@gmail.com'
+    const password = '123'
     // console.log(email, password)
     if (email.trim().lenght === 0 || password.trim().length === 0) {
       console.log('email or password is empty')
@@ -76,7 +76,7 @@ class AuthPage extends Component {
         return res.json()
       })
       .then(resData => {
-        console.log(resData)
+        // console.log(resData)
         if (resData.data.login.token) {
           // console.log(this.context)
           this.context.login(

@@ -139,7 +139,7 @@ class EventsPage extends Component {
       .then(resData => {
         // console.log(resData)
         const events = resData.data.events
-        console.log(events)
+        // console.log(events)
         this.setState({
           events,
           isLoading: false
@@ -154,7 +154,7 @@ class EventsPage extends Component {
     this.togglemodalBookingVisible()
     this.setState(prevState => {
       const selectedEvent = prevState.events.find(e => e._id === eventId)
-      console.log(selectedEvent)
+      console.log(selectedEvent.title)
       return { selectedEvent: selectedEvent }
     })
   }
