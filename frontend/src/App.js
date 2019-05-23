@@ -1,60 +1,19 @@
 import React from 'react'
 import './App.css'
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
-import AuthPage from './pages/Auth'
-import EventsPage from './pages/Events'
-import BookingsPage from './pages/Bookings'
-import MainNavigation from './components/Navigation/MainNavigation'
-import AuthContext from './context/auth.context'
-// import { routes } from './routes'
-// import PrivateRoute from './PrivateRoute'
+import Root from './pages/root'
 
 class App extends React.Component {
-  state = {
-    token: null,
-    userId: null
-  }
-  login = (token, userId, tokenExtokenExpiration) => {
-    this.setState({ token: token, userId: userId })
-  }
-  logout = () => { this.setState({ token: null, userId: null }) }
-  render() {
-    const { token } = this.state
-    const { userId } = this.state
+  // state = {
+  //   token: null,
+  //   userId: null
+  // }
+  // login = (token, userId, tokenExtokenExpiration) => {
+  //   this.setState({ token: token, userId: userId })
+  // }
+  // logout = () => { this.setState({ token: null, userId: null }) }
+  render () {
     return (
-      <Router>
-        <>
-          <AuthContext.Provider
-            value={{
-              token: token,
-              userId: userId,
-              login: this.login,
-              logout: this.logout
-            }}>
-            <MainNavigation />
-            <main>
-              <Switch>
-                {token && <Redirect from='/' to='/events' exact />}
-                {token && <Redirect from='/auth' to='/events' exact />}
-                <Route path='/auth' component={AuthPage} />
-                <Route path='/events' component={EventsPage} />
-                {token && <Route path='/bookings' component={BookingsPage} />}
-                <Redirect to='/auth' exact />
-              </Switch>
-              {/* <Switch>
-                  {routes.map((route, i) =>
-                    route.private === true ? (
-                      <PrivateRoute key={i} {...route} />
-                    ) : (
-                        <Route key={i} {...route} />
-                      )
-                  )}
-                  <Redirect to='/auth' />
-              </Switch> */}
-            </main>
-          </AuthContext.Provider>
-        </>
-      </Router>
+      <Root />
     )
   }
 }

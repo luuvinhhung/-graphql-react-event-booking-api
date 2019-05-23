@@ -1,19 +1,50 @@
 import AuthPage from './pages/Auth'
 import EventsPage from './pages/Events'
 import BookingsPage from './pages/Bookings'
+import Home from './pages/Home'
 
 export const routes = [
   {
-    path: '/auth',
+    path: '/login',
     component: AuthPage
   },
   {
-    path: '/events',
-    component: EventsPage,
-    private: true
+    label: 'Home',
+    path: '/home',
+    private: true,
+    component: Home,
+    routes: [
+      {
+        label: 'dashboard',
+        path: '/home',
+        exact: true,
+        component: EventsPage
+      },
+      {
+        path: '/home/events',
+        component: EventsPage
+      },
+      {
+        path: '/home/bookings',
+        component: BookingsPage
+      }
+    ]
+  }
+]
+export const siderRoutes = [
+  {
+    label: 'dashboard',
+    icon: 'dashboard',
+    path: '/home'
   },
   {
-    path: '/bookings',
-    component: BookingsPage
+    label: 'events',
+    icon: 'smile',
+    path: '/home/events'
+  },
+  {
+    label: 'bookings',
+    icon: 'schedule',
+    path: '/home/bookings'
   }
 ]

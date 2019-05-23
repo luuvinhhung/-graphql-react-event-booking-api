@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import './Auth.css'
+import './Login.css'
 import 'antd/dist/antd.css'
 import { Button, Input } from 'antd'
 
-import AuthContext from '../context/auth.context'
+import Auth from '../context/Authentication'
 
 class AuthPage extends Component {
   constructor(props) {
@@ -14,7 +14,6 @@ class AuthPage extends Component {
       isLogin: true
     }
   }
-  static contextType = AuthContext
   switchModeHandle = () => {
     this.setState(prevState => {
       return { isLogin: !prevState.isLogin }
@@ -78,12 +77,12 @@ class AuthPage extends Component {
       .then(resData => {
         // console.log(resData)
         if (resData.data.login.token) {
-          // console.log(this.context)
-          this.context.login(
-            resData.data.login.token,
-            resData.data.login.userId,
-            resData.data.login.tokenExpiration
-          )
+          Auth.authenticate(() => {
+            localStorage.setItem('access-token', resData.data.login.token)
+            localStorage.setItem('userId', resData.data.login.userId)
+						this.props.history.push('/home')
+						// this.setState({ loading: false, spin: false })
+					})
         }
       })
       .catch(err => {

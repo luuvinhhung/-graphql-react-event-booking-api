@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Spin } from 'antd'
-import AuthContext from '../context/auth.context'
+// import AuthContext from '../context/auth.context'
 import BookingList from '../components/Bookings/BookingList/BookingList'
 import BookingsChart from '../components/Bookings/BookingsChart/BookingsChart'
 import BookingsControls from '../components/Bookings/BookingsControls/BookingsControls'
@@ -11,8 +11,9 @@ class BookingsPage extends Component {
     bookings: [],
     outputType: 'list'
   }
+  token = window.localStorage.getItem('access-token')
   isActive = true
-  static contextType = AuthContext
+  // static contextType = AuthContext
   componentDidMount() {
     this.fetchBookings()
   }
@@ -34,13 +35,12 @@ class BookingsPage extends Component {
           }
         `
     }
-    const token = this.context.token
     fetch('http://localhost:3001/graphql', {
       method: 'POST',
       body: JSON.stringify(requestBody),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + this.token
       }
     })
       .then(res => {
@@ -91,7 +91,7 @@ class BookingsPage extends Component {
       body: JSON.stringify(requestBody),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + this.context.token
+        Authorization: 'Bearer ' + this.token
       }
     })
       .then(res => {
