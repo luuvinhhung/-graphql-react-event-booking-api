@@ -6,7 +6,7 @@ import MainContent from './MainContent'
 export class Home extends Component {
   render () {
     const { routes } = this.props
-    console.log(routes)
+    // console.log(routes)
     // truyen Switch vao MainContent nhu props.children
     return (
       <>

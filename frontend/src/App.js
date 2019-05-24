@@ -1,5 +1,7 @@
 import React from 'react'
 import './App.css'
+import { ApolloProvider } from 'react-apollo'
+import client from './utils/ApolloClient'
 import Root from './pages/root'
 
 class App extends React.Component {
@@ -13,7 +15,9 @@ class App extends React.Component {
   // logout = () => { this.setState({ token: null, userId: null }) }
   render () {
     return (
-      <Root />
+      <ApolloProvider client={client}>
+        <Root />
+      </ApolloProvider>
     )
   }
 }

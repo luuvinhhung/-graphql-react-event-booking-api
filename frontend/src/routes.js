@@ -1,4 +1,4 @@
-import AuthPage from './pages/Auth'
+import AuthPage from './pages/Login'
 import EventsPage from './pages/Events'
 import BookingsPage from './pages/Bookings'
 import Home from './pages/Home'

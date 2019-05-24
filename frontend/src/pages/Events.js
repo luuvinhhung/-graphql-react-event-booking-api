@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import './Events.css'
 import moment from 'moment'
+import { withApollo } from 'react-apollo'
+import gql from 'graphql-tag'
 import { Button, Input, DatePicker, Spin } from 'antd'
 import Modal from '../components/Modal/modal'
 // import AuthContext from '../context/auth.context'
@@ -107,42 +109,13 @@ class EventsPage extends Component {
 
   fetchEvents() {
     this.setState({ isLoading: true })
-    const requestBody = {
-      query: `
-          query {
-            events {
-              _id
-              title
-              description
-              date
-              price
-              creator {
-                _id
-                email
-              }
-            }
-          }
-        `
-    }
-    fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!')
-        }
-        return res.json()
-      })
+    // truyen client apollo qua props
+    const { client } = this.props
+    client
+      .query({ query: eventsQuery })
       .then(resData => {
-        // console.log(resData)
-        const events = resData.data.events
-        // console.log(events)
         this.setState({
-          events,
+          events: resData.data.events,
           isLoading: false
         })
       })
@@ -256,10 +229,10 @@ class EventsPage extends Component {
           <h1>{this.state.selectedEvent.title}</h1>
         </Modal>}
         {this.token &&
-        (<div className='events-control'>
-          <h2>Share your own Events</h2>
-          <Button onClick={this.togglemodalVisible}>Create Event</Button>
-        </div>)}
+          (<div className='events-control'>
+            <h2>Share your own Events</h2>
+            <Button onClick={this.togglemodalVisible}>Create Event</Button>
+          </div>)}
         {this.state.isLoading ?
           <div style={{ textAlign: 'center' }}>
             <Spin tip="Loading...">
@@ -270,4 +243,19 @@ class EventsPage extends Component {
     )
   }
 }
-export default EventsPage
+const eventsQuery = gql`
+  query {
+    events {
+      _id
+      title
+      description
+      date
+      price
+      creator {
+        _id
+        email
+      }
+    }
+  }
+`
+export default withApollo(EventsPage)

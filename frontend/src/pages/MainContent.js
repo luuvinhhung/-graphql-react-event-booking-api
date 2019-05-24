@@ -6,7 +6,7 @@ import { Layout } from 'antd'
 
 const { Header, Content } = Layout
 class MainContent extends Component {
-  render () {
+  render() {
     return (
       <>
         <Layout>
@@ -27,9 +27,7 @@ class MainContent extends Component {
                 background: '#fff',
                 minHeight: 480
               }}
-            >
-              <main>
-                {/* <Switch>
+            >{/* <Switch>
                     {token && <Redirect from='/' to='/events' exact />}
                     {token && <Redirect from='/auth' to='/events' exact />}
                     <Route path='/auth' component={AuthPage} />
@@ -37,8 +35,7 @@ class MainContent extends Component {
                     {token && <Route path='/bookings' component={BookingsPage} />}
                     <Redirect to='/auth' exact />
                   </Switch> */}
-                {this.props.children}
-              </main>
+              {this.props.children}
             </Content>
           </Layout>
         </Layout>
