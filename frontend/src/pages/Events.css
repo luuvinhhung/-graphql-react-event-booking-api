@@ -1,6 +1,7 @@
 .events-control {
   text-align: center;
   border: 1px solid #258FFB;
+  border-radius: 5px;
   padding: 1rem;
   margin: 1rem auto;
   width: 30rem;

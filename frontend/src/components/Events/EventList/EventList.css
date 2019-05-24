@@ -5,5 +5,7 @@
   margin: 2rem auto;
   list-style: none;
   padding: 0;
-  border: 1px solid black;
+}
+.ant-table-body {
+  height: 400px;
 }

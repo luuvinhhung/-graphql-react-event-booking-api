@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import './Login.css'
 import 'antd/dist/antd.css'
-import { Button, Input } from 'antd'
+import { Button, Input, Row, Col } from 'antd'
 
 import Auth from '../context/Authentication'
 
@@ -80,9 +80,9 @@ class AuthPage extends Component {
           Auth.authenticate(() => {
             localStorage.setItem('access-token', resData.data.login.token)
             localStorage.setItem('userId', resData.data.login.userId)
-						this.props.history.push('/home')
-						// this.setState({ loading: false, spin: false })
-					})
+            this.props.history.push('/home')
+            // this.setState({ loading: false, spin: false })
+          })
         }
       })
       .catch(err => {
@@ -93,24 +93,37 @@ class AuthPage extends Component {
   render() {
     const { isLogin } = this.state
     return (
-      <form className='auth-form' onSubmit={this.submitHandle}>
-        <div className='form-control'>
-          <label htmlFor='email'>E-mail</label>
-          <Input type='email' id='email' ref={this.emailEl} />
-        </div>
-        <div className='form-control'>
-          <label htmlFor='password'>Password</label>
-          <Input type='password' id='password' ref={this.passwordEl} />
-        </div>
-        <div className='form-actions'>
-          <Button htmlType="submit"
-            disabled={isLogin ? false : true}
-            // onClick={this.switchModeHandle}
-            type='primary'>
-            Login
+      <>
+        <Row id="layout-login">
+          <Col
+            xs={{ span: 24, offset: 0 }}
+            sm={{ span: 16, offset: 8 }}
+            md={{ span: 14, offset: 10 }}
+            lg={{ span: 12, offset: 12 }}
+            xl={{ span: 7, offset: 17 }}
+          >
+            <form className='auth-form' onSubmit={this.submitHandle}>
+              <div className='form-control'>
+                <label htmlFor='email'>E-mail</label>
+                <Input type='email' id='email' ref={this.emailEl} />
+              </div>
+              <div className='form-control'>
+                <label htmlFor='password'>Password</label>
+                <Input type='password' id='password' ref={this.passwordEl} />
+              </div>
+              <div className='form-actions'>
+                <Button htmlType="submit"
+                  disabled={isLogin ? false : true}
+                  // onClick={this.switchModeHandle}
+                  type='primary'>
+                  Login
           </Button>
-        </div>
-      </form>
+              </div>
+            </form>
+          </Col>
+        </Row>
+      </>
+
     )
   }
 }

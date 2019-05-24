@@ -3,13 +3,14 @@ import './EventList.css'
 // import EventItem from './EventItem/EventItem'
 import moment from 'moment'
 import { Table, Button } from 'antd'
+
+// WARNING: chuyen tu EventList -> ant design table xoa EventItem
 const columns = [
   {
     title: 'Name',
     dataIndex: 'event.title',
     defaultSortOrder: 'ascend',
-    render: text => <a href='javascript:;'>{text}</a>,
-    sorter: (a, b) => a.event.title - b.event.title
+    render: text => <a href='javascript:;'>{text}</a>
   },
   {
     title: 'Price',
@@ -25,15 +26,16 @@ const columns = [
     sortDirections: ['descend', 'ascend']
   },
   {
+    // HACK: align cho column
     title: 'Action',
-    render: (text, record) => (
-      // <span>
-      //   {/* <a href='javascript:;'>Invite {record.name}</a> */}
-      //   {/* <Divider type='vertical' /> */}
-      //   <a href='javascript:;'>Join</a>
-      // </span>
-      <Button type='primary'>JOIN</Button>
-    )
+    dataIndex: 'onDetail',
+    align: 'center',
+    render: (text, record) => {
+      return record.creatorId === record.userId
+        ? <p>Your the owner this event</p>
+        : <Button onClick={record.onDetail.bind(this, record.eventId)} shape='round' type='primary'>Join now!</Button>
+    }
+
   }
 ]
 
@@ -49,19 +51,6 @@ const EventList = (props) => {
       onDetail: props.onViewDetail
     }
   })
-  // return (
-  //   <ul className='event__list'>
-  //     {props.events.map(event => {
-  //       return <EventItem
-  //         key={event._id}
-  //         eventId={event._id}
-  //         event={event}
-  //         userId={props.authUserId}
-  //         creatorId={event.creator._id}
-  //         onDetail={props.onViewDetail} />
-  //     })}
-  //   </ul>
-  // )
   return (
     <>
       <h1 style={{ textAlign: 'center' }}>Avaiable Events</h1>

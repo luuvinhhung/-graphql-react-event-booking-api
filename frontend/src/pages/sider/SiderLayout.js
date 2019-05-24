@@ -27,7 +27,7 @@ class SiderLayout extends Component {
                 trigger={null}
                 collapsible
                 collapsed={this.state.collapsed}>
-                <Menu theme="light" mode="inline" defaultSelectedKeys={['1']} justify="center" align="left">
+                <Menu theme="light" mode="inline" defaultSelectedKeys={['2']} justify="center" align="left">
                     <div style={{ height: 60, paddingTop: 20, fontSize: 20, textAlign: 'center', justifyItems: 'center' }}>
                         <Icon className="trigger"
                             type={this.state.collapsed ? 'menu-unfold' : 'menu-fold'}

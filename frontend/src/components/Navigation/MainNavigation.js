@@ -17,7 +17,7 @@ class mainNavigation extends Component {
     Auth.logout(() => {
       window.localStorage.removeItem('access-token')
       this.props.history.push('/login')
-      // this.props.client.resetStore()
+      this.props.client.resetStore()
     })
   }
   render() {

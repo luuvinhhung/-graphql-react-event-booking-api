@@ -62,7 +62,7 @@ const BookingsChart = props => {
   //     data: [0, 0, 2]
   //   }
   // ]
-  console.log(chartData.datasets)
+  // console.log(chartData.datasets)
   return (
     <div style={{ textAlign: 'center', marginTop: 20 }}>
       <BarChart data={chartData} />

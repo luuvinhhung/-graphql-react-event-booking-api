@@ -2,11 +2,11 @@ import React, { Component } from 'react'
 import './Events.css'
 import moment from 'moment'
 import { withApollo } from 'react-apollo'
-import gql from 'graphql-tag'
 import { Button, Input, DatePicker, Spin } from 'antd'
 import Modal from '../components/Modal/modal'
 // import AuthContext from '../context/auth.context'
 import EventList from '../components/Events/EventList/EventList'
+import { eventsQuery, createEvent, bookEvent } from '../utils/queries'
 
 const { TextArea } = Input
 
@@ -33,7 +33,6 @@ class EventsPage extends Component {
     this.fetchEvents()
   }
   togglemodalVisible = () => {
-    // console.log(this.state.modalVisible)
     this.setState(prevState => {
       return { modalVisible: !prevState.modalVisible }
     })
@@ -45,6 +44,7 @@ class EventsPage extends Component {
         selectedEvent: null
       }
     })
+
   }
   submitHandle = () => {
     this.togglemodalVisible()
@@ -52,39 +52,16 @@ class EventsPage extends Component {
     const price = +this.priceEl.current.state.value
     const date = this.dateEl.current.picker.state.value.toISOString()
     const description = this.descriptionEl.current.textAreaRef.value
-    const requestBody = {
-      // check type of variables in graphql/schema
-      query: `
-          mutation CreateEvent($title: String!, $desc: String!, $price: Float!, $date: String!) {
-            createEvent(eventInput: {title: $title, description: $desc, price: $price, date: $date}) {
-              _id
-              title
-              description
-              date
-              price
-            }
-          }
-        `,
-      variables: {
-        title: title,
-        desc: description,
-        price: price,
-        date: date
-      }
-    }
-    fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.token
-      }
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!')
+    const { client } = this.props
+    client
+      .mutate({
+        mutation: createEvent,
+        variables: {
+          title: title,
+          desc: description,
+          price: price,
+          date: date
         }
-        return res.json()
       })
       .then(resData => {
         this.setState(prevState => {
@@ -110,8 +87,8 @@ class EventsPage extends Component {
   fetchEvents() {
     this.setState({ isLoading: true })
     // truyen client apollo qua props
-    const { client } = this.props
-    client
+    // HACK: apollo client
+    this.props.client
       .query({ query: eventsQuery })
       .then(resData => {
         this.setState({
@@ -128,7 +105,7 @@ class EventsPage extends Component {
     this.togglemodalBookingVisible()
     this.setState(prevState => {
       const selectedEvent = prevState.events.find(e => e._id === eventId)
-      console.log(selectedEvent.title)
+      // console.log(selectedEvent.title)
       return { selectedEvent: selectedEvent }
     })
   }
@@ -138,52 +115,26 @@ class EventsPage extends Component {
       this.setState({ selectedEvent: null });
       return;
     }
-    // console.log(this.state.selectedEvent._id)
-    const requestBody = {
-      query: `
-          mutation BookEvent($eventId: ID!) {
-            bookEvent(eventId: $eventId) {
-            _id
-            createdAt
-            updatedAt
-            }
-          }
-        `,
-      variables: {
-        eventId: this.state.selectedEvent._id
-      }
-    };
-    // const token = this.context.token
-    // console.log(token)
-    fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.token
-      }
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!');
+    console.log(this.state.selectedEvent._id)
+    this.props.client
+      .mutate({
+        mutation: bookEvent,
+        variables: {
+          eventId: this.state.selectedEvent._id
         }
-        return res.json();
       })
       .then(resData => {
         console.log(resData);
-        this.setState({ selectedEvent: null });
+        this.setState({ selectedEvent: null })
       })
       .catch(err => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   }
   render() {
     const { modalVisible } = this.state
     const dateFormat = 'DD/MMM/YYYY'
     const { events } = this.state
-    // const eventList = this.state.events.map(event => {
-    //   return <li className='events__list-item' key={event._id}>{event.title}</li>
-    // })
     return (
       <>
         <Modal
@@ -227,11 +178,12 @@ class EventsPage extends Component {
           onOk={this.bookEventHandler}
         >
           <h1>{this.state.selectedEvent.title}</h1>
+          <p>{this.state.selectedEvent.price}</p>
         </Modal>}
         {this.token &&
           (<div className='events-control'>
             <h2>Share your own Events</h2>
-            <Button onClick={this.togglemodalVisible}>Create Event</Button>
+            <Button onClick={this.togglemodalVisible} type='primary' block>Create Event</Button>
           </div>)}
         {this.state.isLoading ?
           <div style={{ textAlign: 'center' }}>
@@ -243,19 +195,4 @@ class EventsPage extends Component {
     )
   }
 }
-const eventsQuery = gql`
-  query {
-    events {
-      _id
-      title
-      description
-      date
-      price
-      creator {
-        _id
-        email
-      }
-    }
-  }
-`
 export default withApollo(EventsPage)
