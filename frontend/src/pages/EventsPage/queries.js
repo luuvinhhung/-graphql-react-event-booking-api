@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-// TODO: them mutation
+// TODO: event queries
 export const eventsQuery = gql`
   query {
     events {
@@ -26,8 +26,7 @@ export const createEvent = gql`
         date
         price
       }
-    }
-  
+    } 
 `
 export const bookEvent = gql`
   mutation($eventId: ID!) {

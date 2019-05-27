@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import './Login.scss'
 import 'antd/dist/antd.css'
+import { withApollo } from 'react-apollo'
+import { login } from './queries'
 import { Button, Input, Row, Col } from 'antd'
-
 import Auth from '../../context/Authentication'
 
 class Login extends Component {
@@ -30,55 +31,22 @@ class Login extends Component {
       console.log('email or password is empty')
       return
     }
-    let requestBody = {
-      query: `
-        query Login($email: String!, $password: String!) {
-          login(email: $email, password: $password){
-            userId
-            token
-          }
-        }
-      `,
-      variables: {
-        email: email,
-        password: password
-      }
-    }
-    if (!this.state.isLogin) {
-      requestBody = {
-        query: `
-          mutation CreateUser($email: String!, $password: String!) {
-            createUser(userInput: {email: $email, password: $password}) {
-              _id
-              email
-            }
-          }
-        `,
+    this.props.client
+      .query({
+        query: login,
         variables: {
           email: email,
           password: password
         }
-      }
-    }
-    // console.log(requestBody.query)
-    fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!')
-        }
-        return res.json()
       })
       .then(resData => {
         // console.log(resData)
         if (resData.data.login.token) {
           Auth.authenticate(() => {
-            window.localStorage.setItem('access-token', resData.data.login.token)
+            window.localStorage.setItem(
+              'access-token',
+              resData.data.login.token
+            )
             window.localStorage.setItem('userId', resData.data.login.userId)
             this.props.history.push('/home')
             // this.setState({ loading: false, spin: false })
@@ -88,6 +56,23 @@ class Login extends Component {
       .catch(err => {
         console.log(err)
       })
+    // if (!this.state.isLogin) {
+    //   let requestBody = {
+    //     query: `
+    //       mutation CreateUser($email: String!, $password: String!) {
+    //         createUser(userInput: {email: $email, password: $password}) {
+    //           _id
+    //           email
+    //         }
+    //       }
+    //     `,
+    //     variables: {
+    //       email: email,
+    //       password: password
+    //     }
+    //   }
+    // }
+    // console.log(requestBody.query)
   }
   render () {
     const { isLogin } = this.state
@@ -127,4 +112,4 @@ class Login extends Component {
     )
   }
 }
-export default Login
+export default withApollo(Login)

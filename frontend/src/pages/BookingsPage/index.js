@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import { Spin } from 'antd'
 // import AuthContext from '../context/auth.context'
+import { withApollo } from 'react-apollo'
 import BookingList from '../../components/Bookings/BookingList/BookingList'
 import BookingsChart from '../../components/Bookings/BookingChart/BookingChart'
 import BookingsControls from '../../components/Bookings/BookingControls/BookingControls'
+import { bookingsQuery, cancelBooking } from './queries'
 
 class BookingsPage extends Component {
   state = {
@@ -19,38 +21,9 @@ class BookingsPage extends Component {
   }
   fetchBookings = () => {
     this.setState({ isLoading: true })
-    const requestBody = {
-      query: `
-          query {
-            bookings {
-              _id
-              createdAt
-              event {
-                _id
-                title
-                price
-                date
-              }
-            }
-          }
-        `
-    }
-    fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + this.token
-      }
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!')
-        }
-        return res.json()
-      })
+    this.props.client.query({ query: bookingsQuery })
       .then(resData => {
-        // console.log(resData)
+      // console.log(resData)
         const bookings = resData.data.bookings
         console.log(bookings)
         if (this.isActive) {
@@ -60,45 +33,18 @@ class BookingsPage extends Component {
           })
         }
       })
-      .catch(err => {
-        console.log(err)
-        if (this.isActive) {
-          this.setState({ isLoading: false })
-        }
-      })
   }
   componentWillUnmount () {
     this.isActive = false
   }
   deleteBookingHangler = bookingId => {
     this.setState({ isLoading: true })
-    const requestBody = {
-      query: `
-          mutation CancelBookingCancelBooking($id: ID!) {
-            cancelBooking(bookingId: $id) {
-            _id
-            title
-            }
-          }
-        `,
-      variables: {
-        id: bookingId
-      }
-    }
-
-    fetch('http://localhost:3001/graphql', {
-      method: 'POST',
-      body: JSON.stringify(requestBody),
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + this.token
-      }
-    })
-      .then(res => {
-        if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!')
+    this.props.client
+      .mutate({
+        mutation: cancelBooking,
+        variables: {
+          id: bookingId
         }
-        return res.json()
       })
       .then(resData => {
         this.setState(prevState => {
@@ -155,4 +101,4 @@ class BookingsPage extends Component {
     return <>{content}</>
   }
 }
-export default BookingsPage
+export default withApollo(BookingsPage)

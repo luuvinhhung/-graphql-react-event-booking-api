@@ -6,7 +6,7 @@ import { Button, Input, DatePicker, Spin } from 'antd'
 import Modal from '../../components/Modal/modal'
 // import AuthContext from '../context/auth.context'
 import EventList from '../../components/Events/EventList/EventList'
-import { eventsQuery, createEvent, bookEvent } from '../../utils/queries'
+import { eventsQuery, createEvent, bookEvent } from './queries'
 
 const { TextArea } = Input
 
