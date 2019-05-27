@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Spin } from 'antd'
 // import AuthContext from '../context/auth.context'
-import BookingList from '../components/Bookings/BookingList/BookingList'
-import BookingsChart from '../components/Bookings/BookingsChart/BookingsChart'
-import BookingsControls from '../components/Bookings/BookingsControls/BookingsControls'
+import BookingList from '../../components/Bookings/BookingList/BookingList'
+import BookingsChart from '../../components/Bookings/BookingChart/BookingChart'
+import BookingsControls from '../../components/Bookings/BookingControls/BookingControls'
 
 class BookingsPage extends Component {
   state = {
@@ -14,7 +14,7 @@ class BookingsPage extends Component {
   token = window.localStorage.getItem('access-token')
   isActive = true
   // static contextType = AuthContext
-  componentDidMount() {
+  componentDidMount () {
     this.fetchBookings()
   }
   fetchBookings = () => {
@@ -40,7 +40,7 @@ class BookingsPage extends Component {
       body: JSON.stringify(requestBody),
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + this.token
+        Authorization: 'Bearer ' + this.token
       }
     })
       .then(res => {
@@ -67,11 +67,11 @@ class BookingsPage extends Component {
         }
       })
   }
-  componentWillUnmount() {
+  componentWillUnmount () {
     this.isActive = false
   }
-  deleteBookingHangler = (bookingId) => {
-    this.setState({ isLoading: true });
+  deleteBookingHangler = bookingId => {
+    this.setState({ isLoading: true })
     const requestBody = {
       query: `
           mutation CancelBookingCancelBooking($id: ID!) {
@@ -84,7 +84,7 @@ class BookingsPage extends Component {
       variables: {
         id: bookingId
       }
-    };
+    }
 
     fetch('http://localhost:3001/graphql', {
       method: 'POST',
@@ -96,24 +96,24 @@ class BookingsPage extends Component {
     })
       .then(res => {
         if (res.status !== 200 && res.status !== 201) {
-          throw new Error('Failed!');
+          throw new Error('Failed!')
         }
-        return res.json();
+        return res.json()
       })
       .then(resData => {
         this.setState(prevState => {
           const updatedBookings = prevState.bookings.filter(booking => {
-            return booking._id !== bookingId;
-          });
-          return { bookings: updatedBookings, isLoading: false };
-        });
+            return booking._id !== bookingId
+          })
+          return { bookings: updatedBookings, isLoading: false }
+        })
       })
       .catch(err => {
-        console.log(err);
-        this.setState({ isLoading: false });
-      });
+        console.log(err)
+        this.setState({ isLoading: false })
+      })
   }
-  changeOutputTypeHandler = (outputType) => {
+  changeOutputTypeHandler = outputType => {
     if (outputType === 'list') {
       this.setState({
         outputType: 'list'
@@ -125,39 +125,34 @@ class BookingsPage extends Component {
     }
   }
 
-  render() {
-    let content = <Spin style={{ padding: '30px 50%' }} tip="Loading..." />
+  render () {
+    let content = <Spin style={{ padding: '30px 50%' }} tip='Loading...' />
     const { bookings } = this.state
     if (!this.state.isLoading) {
       content = (
         <>
           <div style={{ textAlign: 'center', paddingTop: 30 }}>
-            <BookingsControls 
+            <BookingsControls
               activeOutputType={this.state.outputType}
-              onChange={this.changeOutputTypeHandler} />
+              onChange={this.changeOutputTypeHandler}
+            />
             {/* <Button onClick={this.changeOutputTypeHandler.bind(this, 'list')}>List</Button>
             <Button onClick={this.changeOutputTypeHandler.bind(this, 'chart')}>Chart</Button> */}
           </div>
           <div>
-            {
-              this.state.outputType === 'list' ? (
-                <BookingList
-                  bookings={bookings}
-                  onDelete={this.deleteBookingHangler} />
-              ) : (
-                  <BookingsChart bookings={bookings} />
-                )
-            }
+            {this.state.outputType === 'list' ? (
+              <BookingList
+                bookings={bookings}
+                onDelete={this.deleteBookingHangler}
+              />
+            ) : (
+              <BookingsChart bookings={bookings} />
+            )}
           </div>
         </>
       )
     }
-    return (
-      <>
-        {content}
-      </>
-
-    )
+    return <>{content}</>
   }
 }
 export default BookingsPage

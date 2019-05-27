@@ -1,5 +1,5 @@
 import React from 'react'
-import './EventList.css'
+import './EventList.scss'
 // import EventItem from './EventItem/EventItem'
 import moment from 'moment'
 import { Table, Button } from 'antd'

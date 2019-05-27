@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
-import RouteWithSubRoutes from '../utils/RouteWithSubRoutes'
+import RouteWithSubRoutes from '../../utils/RouteWithSubRoutes'
 import { Switch, Redirect } from 'react-router-dom'
-import MainContent from './MainContent'
+import MainContent from '../MainContent'
 
 export class Home extends Component {
   render () {

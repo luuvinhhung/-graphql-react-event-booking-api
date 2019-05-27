@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import './Events.css'
+import './Events.scss'
 import moment from 'moment'
 import { withApollo } from 'react-apollo'
 import { Button, Input, DatePicker, Spin } from 'antd'
-import Modal from '../components/Modal/modal'
+import Modal from '../../components/Modal/modal'
 // import AuthContext from '../context/auth.context'
-import EventList from '../components/Events/EventList/EventList'
-import { eventsQuery, createEvent, bookEvent } from '../utils/queries'
+import EventList from '../../components/Events/EventList/EventList'
+import { eventsQuery, createEvent, bookEvent } from '../../utils/queries'
 
 const { TextArea } = Input
 
@@ -16,10 +16,10 @@ class EventsPage extends Component {
     events: [],
     isLoading: false,
     selectedEvent: null,
-    modelBookingVisible: false,
+    modelBookingVisible: false
   }
   // static contextType = AuthContext
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.titleEl = React.createRef()
     this.priceEl = React.createRef()
@@ -29,7 +29,7 @@ class EventsPage extends Component {
     this.token = window.localStorage.getItem('access-token')
     this.userId = window.localStorage.getItem('userId')
   }
-  componentDidMount() {
+  componentDidMount () {
     this.fetchEvents()
   }
   togglemodalVisible = () => {
@@ -44,7 +44,6 @@ class EventsPage extends Component {
         selectedEvent: null
       }
     })
-
   }
   submitHandle = () => {
     this.togglemodalVisible()
@@ -84,7 +83,7 @@ class EventsPage extends Component {
       })
   }
 
-  fetchEvents() {
+  fetchEvents () {
     this.setState({ isLoading: true })
     // truyen client apollo qua props
     // HACK: apollo client
@@ -112,8 +111,8 @@ class EventsPage extends Component {
   bookEventHandler = () => {
     this.togglemodalBookingVisible()
     if (!this.token) {
-      this.setState({ selectedEvent: null });
-      return;
+      this.setState({ selectedEvent: null })
+      return
     }
     console.log(this.state.selectedEvent._id)
     this.props.client
@@ -124,14 +123,14 @@ class EventsPage extends Component {
         }
       })
       .then(resData => {
-        console.log(resData);
+        console.log(resData)
         this.setState({ selectedEvent: null })
       })
       .catch(err => {
         console.log(err)
       })
   }
-  render() {
+  render () {
     const { modalVisible } = this.state
     const dateFormat = 'DD/MMM/YYYY'
     const { events } = this.state
@@ -146,11 +145,11 @@ class EventsPage extends Component {
           <form>
             <div className='form-control'>
               <label htmlFor='title'>Title</label>
-              <Input type='text' id='title' ref={this.titleEl}></Input>
+              <Input type='text' id='title' ref={this.titleEl} />
             </div>
             <div className='form-control'>
               <label htmlFor='price'>Price</label>
-              <Input min={'0'} type='number' id='price' ref={this.priceEl}></Input>
+              <Input min={'0'} type='number' id='price' ref={this.priceEl} />
             </div>
             <div className='form-control'>
               <label htmlFor='date'>Date</label>
@@ -163,7 +162,7 @@ class EventsPage extends Component {
             <div className='form-control'>
               <label htmlFor='description'>Description</label>
               <TextArea
-                placeholder="Introduce your event"
+                placeholder='Introduce your event'
                 autosize={{ minRows: 3, maxRows: 6 }}
                 ref={this.descriptionEl}
                 onChange={this.testArea}
@@ -185,10 +184,9 @@ class EventsPage extends Component {
             <h2>Share your own Events</h2>
             <Button onClick={this.togglemodalVisible} type='primary' block>Create Event</Button>
           </div>)}
-        {this.state.isLoading ?
-          <div style={{ textAlign: 'center' }}>
-            <Spin tip="Loading...">
-            </Spin>
+        {this.state.isLoading
+          ? <div style={{ textAlign: 'center' }}>
+            <Spin tip='Loading...' />
           </div>
           : <EventList events={events} authUserId={this.userId} onViewDetail={this.showDetailHandler} />}
       </>

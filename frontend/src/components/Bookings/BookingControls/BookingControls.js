@@ -1,5 +1,5 @@
 import React from 'react'
-import './BookingsControls.css'
+import './BookingsControls.scss'
 import { Button } from 'antd'
 const BookingsControls = (props) => {
   const classes = 'button'

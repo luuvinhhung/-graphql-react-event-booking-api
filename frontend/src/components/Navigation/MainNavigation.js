@@ -8,19 +8,18 @@ import { Button } from 'antd'
 import './MainNavigation.css'
 
 class mainNavigation extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.token = window.localStorage.getItem('access-token')
-
   }
   logoutHandler = () => {
     Auth.logout(() => {
       window.localStorage.removeItem('access-token')
       this.props.history.push('/login')
-      this.props.client.resetStore()
+      // this.props.client.resetStore()
     })
   }
-  render() {
+  render () {
     return (
       <>
         {
@@ -29,7 +28,9 @@ class mainNavigation extends Component {
               <h1>EasyEvent</h1>
             </div>
             <nav className='main-navigation__items'>
-                { this.token && <Button onClick={this.logoutHandler}>Logout</Button> }
+              {this.token && (
+                <Button onClick={this.logoutHandler}>Logout</Button>
+              )}
             </nav>
           </header>
         }

@@ -3,8 +3,8 @@
   border: none;
   border-bottom: 2px solid transparent;
   cursor: pointer;
-}
-.button.active {
-  border-bottom-color: #258FFB;
-  color: #258FFB;
+  &:active {
+    border-bottom-color: #258ffb;
+    color: #258ffb;
+  }
 }

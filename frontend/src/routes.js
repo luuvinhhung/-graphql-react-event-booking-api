@@ -1,32 +1,35 @@
-import AuthPage from './pages/Login'
-import EventsPage from './pages/Events'
-import BookingsPage from './pages/Bookings'
-import Home from './pages/Home'
+// import AuthPage from './pages/Login/Login'
+// import EventsPage from './pages/Events/Events'
+// import BookingsPage from './pages/Bookings/Bookings'
+// import Home from './pages/Home/Home'
 
 export const routes = [
   {
+    label: 'Login',
     path: '/login',
-    component: AuthPage
+    component: 'Login'
   },
   {
     label: 'Home',
     path: '/home',
     private: true,
-    component: Home,
+    component: 'Home',
     routes: [
       {
-        label: 'dashboard',
+        label: 'Events',
         path: '/home',
         exact: true,
-        component: EventsPage
+        component: 'EventsPage'
       },
       {
+        label: 'Events',
         path: '/home/events',
-        component: EventsPage
+        component: 'EventsPage'
       },
       {
+        label: 'Bookings',
         path: '/home/bookings',
-        component: BookingsPage
+        component: 'BookingsPage'
       }
     ]
   }
