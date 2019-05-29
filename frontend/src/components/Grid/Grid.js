@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { AgGridReact } from 'ag-grid-react'
+// TODO: them button vao row: https://www.ag-grid.com/javascript-grid-cell-rendering-components/
 import ChildMessageRenderer from './ChildMessageRenderer'
 import 'ag-grid-enterprise'
 import { Spin } from 'antd'
@@ -126,7 +127,7 @@ export default class Grid extends Component {
       <div
         className='ag-theme-balham'
         style={{
-          height: '500px',
+          height: '400px',
           width: '100%'
         }}
       >
