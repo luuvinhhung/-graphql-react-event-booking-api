@@ -5,7 +5,7 @@ import { withApollo } from 'react-apollo'
 import BookingList from '../../components/Bookings/BookingList/BookingList'
 import BookingsChart from '../../components/Bookings/BookingChart/BookingChart'
 import BookingsControls from '../../components/Bookings/BookingControls/BookingControls'
-import { bookingsQuery, cancelBooking } from './queries'
+import { bookingsQuery, cancelBooking } from '../../graphql/queries/bookingsQueries'
 
 class BookingsPage extends Component {
   state = {

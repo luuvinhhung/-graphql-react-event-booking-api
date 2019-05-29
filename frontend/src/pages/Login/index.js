@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import './Login.scss'
-import 'antd/dist/antd.css'
 import { withApollo } from 'react-apollo'
-import { login } from './queries'
+import { login } from '../../graphql/queries/loginQueries'
 import { Button, Input, Row, Col } from 'antd'
 import Auth from '../../context/Authentication'
 

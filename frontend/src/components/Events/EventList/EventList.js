@@ -10,7 +10,7 @@ const columns = [
     title: 'Name',
     dataIndex: 'event.title',
     defaultSortOrder: 'ascend',
-    render: text => <a href='javascript:;'>{text}</a>
+    render: text => <a href='google.com'>{text}</a>
   },
   {
     title: 'Price',

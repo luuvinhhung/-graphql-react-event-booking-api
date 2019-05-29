@@ -30,6 +30,11 @@ export const routes = [
         label: 'Bookings',
         path: '/home/bookings',
         component: 'BookingsPage'
+      },
+      {
+        label: 'EventList',
+        path: '/home/eventlist',
+        component: 'EventListPage'
       }
     ]
   }
@@ -49,5 +54,10 @@ export const siderRoutes = [
     label: 'bookings',
     icon: 'schedule',
     path: '/home/bookings'
+  },
+  {
+    label: 'EventList',
+    icon: 'schedule',
+    path: '/home/eventlist'
   }
 ]

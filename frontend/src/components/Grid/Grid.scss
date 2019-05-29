@@ -1,0 +1,8 @@
+$ag-icons-path: "../../../node_modules/ag-grid-community/src/styles/ag-theme-balham/icons/";
+$header-background-color: #258ffb;
+$odd-row-background-color: #e6f7ff;
+$hover-color: #bae7ff;
+$foreground-color: black;
+$border-color: #d9d9d9; 
+@import "../../../node_modules/ag-grid-community/src/styles/ag-grid.scss";
+@import "../../../node_modules/ag-grid-community/src/styles/ag-theme-balham/sass/ag-theme-balham.scss";

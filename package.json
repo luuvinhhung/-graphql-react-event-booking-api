@@ -5,7 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon -r esm app.js"
+    "start": "nodemon app.js",
+    "client": "npm run start --prefix frontend",
+    "server": "nodemon app.js",
+    "dev": "concurrently \"npm run server\" \" npm run client\""
   },
   "author": "",
   "license": "ISC",

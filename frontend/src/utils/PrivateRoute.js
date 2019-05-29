@@ -12,7 +12,7 @@ const PrivateRoute = route => (
         <Route
           {...route}
           component={props => {
-            console.log(`../pages/${route.component}/`)
+            // console.log(`../pages/${route.component}/`)
             const MyComponent = withLoadable(
               import(`../pages/${route.component}/`)
             )
