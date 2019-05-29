@@ -20,7 +20,7 @@
     "cors": "^2.8.5",
     "dataloader": "^1.4.0",
     "esm": "^3.2.22",
-    "express": "^4.16.4",
+    "express": "^4.17.1",
     "express-graphql": "^0.7.1",
     "graphql": "^14.0.2",
     "jsonwebtoken": "^8.5.1",
