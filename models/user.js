@@ -11,6 +11,10 @@ const userSchema = new Schema({
     type: String,
     required: true
   },
+  name: {
+    type: String,
+    required: true
+  },
   createdEvents: [
     {
       type: Schema.Types.ObjectId,
@@ -19,4 +23,4 @@ const userSchema = new Schema({
   ]
 })
 
-module.exports = mongoose.model('User', userSchema)
+export default mongoose.model('User', userSchema)

@@ -7,7 +7,7 @@ import { setContext } from 'apollo-link-context'
 
 const cache = new InMemoryCache()
 const httpLink = new HttpLink({
-  uri: 'http://localhost:3001/graphql'
+  uri: 'http://localhost:4000/graphql'
 })
 const authLink = setContext((_, { headers, ...rest }) => {
   const token = window.localStorage.getItem('access-token')

@@ -1,11 +1,9 @@
-const authResolver = require('./auth')
-const eventsResolver = require('./events')
-const bookingResolver = require('./booking')
+import authResolver from './auth'
+import eventsResolver from './events'
+import bookingResolver from './booking'
 
-const rootResolver = {
-  ...authResolver,
-  ...eventsResolver,
-  ...bookingResolver
-}
-
-module.exports = rootResolver
+export default [
+  authResolver,
+  eventsResolver,
+  bookingResolver
+]

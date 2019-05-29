@@ -1,8 +1,8 @@
-const DataLoader = require('dataloader')
+import DataLoader from 'dataloader'
 
-const Event = require('../../models/event')
-const User = require('../../models/user')
-const { dateToString } = require('../../helpers/date')
+import Event from '../../models/event'
+import User from '../../models/user'
+import { dateToString } from '../../helpers/date'
 
 const eventLoader = new DataLoader((eventIds) => {
   return events(eventIds)
@@ -72,9 +72,11 @@ const transformBooking = booking => {
     updatedAt: dateToString(booking._doc.updatedAt)
   }
 }
+export { transformEvent }
+export { transformBooking }
 
-exports.transformEvent = transformEvent
-exports.transformBooking = transformBooking
+// exports.transformEvent = transformEvent
+// exports.transformBooking = transformBooking
 
 // exports.user = user
 // exports.events = events
